@@ -59,7 +59,7 @@ PTD::PTD(const Parameters& p, Bbox b)
 
   params = p;
   params.spacing = params.spacing *  params.spacing; //squared comparable distance
-  if (params.ncores > omp_get_max_threads()) params.ncores = omp_get_max_threads();
+  if (params.ncores > (unsigned int)omp_get_max_threads()) params.ncores = omp_get_max_threads();
 
   logger = nullptr;
   d = nullptr;
