@@ -71,5 +71,5 @@ catch(std::exception& e)
 ### License
 
 - [Incremental Delaunay](https://github.com/hporro/IncrementalDelaunay) (`src/hporro/`) by Heinich Porro. Licence MIT. Heavily modified by Jean-Romain Roussel.
-- [Progressive TIN densification] (`src/ptd`) by Jean-Romain Roussel. Licence MIT.
+- Progressive TIN densification (`src/ptd`) by Jean-Romain Roussel. Licence MIT.
 - [Nanoflann](https://github.com/jlblancoc/nanoflann): Blanco, Jose Luis and Rai, Pranjal Kumar (2014). nanoflann: a C++ header-only fork of FLANN, a library for Nearest Neighbor (NN) with KD-trees}. License BSD.
