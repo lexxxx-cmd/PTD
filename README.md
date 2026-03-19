@@ -1,6 +1,6 @@
 # Progressive TIN Densification
 
-This project provides a standalone c++ implementation of the Progressive TIN Densification (PTD) algorithm for ground classification in LiDAR point clouds. 
+Standalone C++ implementation of the Progressive TIN Densification (PTD) algorithm for ground classification in LiDAR point clouds. 
 
 PTD is a well-established, physically motivated method for ground extraction that incrementally builds a terrain model using a Triangulated Irregular Network (TIN). See *Axelsson, P. (2000). DEM Generation from Laser Scanner Data Using adaptive TIN Models. International Archives of Photogrammetry and Remote Sensing, 33(B4), 110–117. https://www.isprs.org/proceedings/xxxiii/congress/part4/111_xxxiii-part4.pdf*
 
