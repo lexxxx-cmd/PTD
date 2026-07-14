@@ -1,8 +1,10 @@
+#define _USE_MATH_DEFINES
 #include <stdexcept>
 #include <limits>
 #include <algorithm>
 #include <numeric>
 #include <random>
+#include <string>
 #include <cmath>
 #include <chrono>
 

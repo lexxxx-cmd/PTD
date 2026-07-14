@@ -6,7 +6,7 @@ project(ptd
 )
 
 # ---- Options ---------------------------------------------------------------
-option(BUILD_SHARED_LIBS "Build shared library instead of static" ON)
+option(BUILD_SHARED_LIBS "Build shared library instead of static" OFF)
 
 # ---- C++ standard ----------------------------------------------------------
 set(CMAKE_CXX_STANDARD 17)
@@ -56,3 +56,6 @@ else()
         -Wno-unused-variable
     )
 endif()
+
+# ---- CLI -------------------------------------------------------------------
+add_subdirectory(CLI)

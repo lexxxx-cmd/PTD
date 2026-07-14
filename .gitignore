@@ -4,9 +4,14 @@ doc
 .Rproj.user
 .Rhistory
 .RData
+build
 *.o
 *.so
 *.dll
+*.exe
+*.obj
+*.las
+*_runtime.json
 *Rplots.pdf
 revdep
 CRAN-RELEASE
