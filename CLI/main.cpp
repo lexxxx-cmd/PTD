@@ -1,6 +1,6 @@
 // ======================================================================================
 // PTD CLI — Progressive TIN Densification: PCD input → LAS output
-// Usage: ptd_cli --input <pcd> --output <las> [options]
+// Usage: ptd_cli --input <pcd> --output <las> [--config <config.yaml>]
 // ======================================================================================
 
 #include <chrono>
@@ -10,25 +10,22 @@
 #include <string>
 #include <vector>
 
+#include <yaml-cpp/yaml.h>
+
 #include "LASWriter.h"
 #include "PCDReader.h"
 #include "ptd/PTD.h"
 
 static void print_usage() {
     std::cout <<
-        "Usage: ptd_cli --input <pcd> --output <las> [options]\n"
+        "Usage: ptd_cli --input <pcd> --output <las> [--config <config.yaml>]\n"
         "  --input   Input PCD file\n"
         "  --output  Output LAS file\n"
-        "  --spacing Grid spacing, meters (default: 0.25)\n"
-        "  --max_angle  Max iteration angle, degrees (default: 30)\n"
-        "  --max_dist   Max iteration distance, meters (default: 2)\n"
-        "  --seed_res   Seed resolution search, meters (default: 10)\n"
-        "  --max_iter   Max iterations (default: 50)\n"
-        "  --buffer     Buffer size, meters (default: 30)\n";
+        "  --config  YAML config file (default: built-in defaults)\n";
 }
 
 int main(int argc, char* argv[]) {
-    std::string input, output;
+    std::string input, output, config_path;
     PTD::Parameters params;
 
     for (int i = 1; i < argc; ++i) {
@@ -36,24 +33,46 @@ int main(int argc, char* argv[]) {
             input = argv[++i];
         else if (strcmp(argv[i], "--output") == 0 && i + 1 < argc)
             output = argv[++i];
-        else if (strcmp(argv[i], "--spacing") == 0 && i + 1 < argc)
-            params.spacing = atof(argv[++i]);
-        else if (strcmp(argv[i], "--max_angle") == 0 && i + 1 < argc)
-            params.max_iteration_angle = atof(argv[++i]);
-        else if (strcmp(argv[i], "--max_dist") == 0 && i + 1 < argc)
-            params.max_iteration_distance = atof(argv[++i]);
-        else if (strcmp(argv[i], "--seed_res") == 0 && i + 1 < argc)
-            params.seed_resolution_search = atof(argv[++i]);
-        else if (strcmp(argv[i], "--max_iter") == 0 && i + 1 < argc)
-            params.max_iter = atoi(argv[++i]);
-        else if (strcmp(argv[i], "--buffer") == 0 && i + 1 < argc)
-            params.buffer_size = atof(argv[++i]);
+        else if (strcmp(argv[i], "--config") == 0 && i + 1 < argc)
+            config_path = argv[++i];
         else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
             print_usage(); return 0;
         }
     }
 
     if (input.empty() || output.empty()) { print_usage(); return 1; }
+
+    // --- Load YAML config if provided ---
+    if (!config_path.empty()) {
+        try {
+            YAML::Node cfg = YAML::LoadFile(config_path);
+
+            if (cfg["seed_resolution_search"])
+                params.seed_resolution_search = cfg["seed_resolution_search"].as<float>();
+            if (cfg["max_iteration_angle"])
+                params.max_iteration_angle = cfg["max_iteration_angle"].as<float>();
+            if (cfg["max_iteration_distance"])
+                params.max_iteration_distance = cfg["max_iteration_distance"].as<float>();
+            if (cfg["spacing"])
+                params.spacing = cfg["spacing"].as<float>();
+            if (cfg["buffer_size"])
+                params.buffer_size = cfg["buffer_size"].as<float>();
+            if (cfg["max_iter"])
+                params.max_iter = cfg["max_iter"].as<unsigned int>();
+            if (cfg["ncores"])
+                params.ncores = cfg["ncores"].as<unsigned int>();
+            if (cfg["verbose"])
+                params.verbose = cfg["verbose"].as<bool>();
+
+            std::cout << "PTD parameters loaded from: " << config_path << std::endl;
+        } catch (const YAML::Exception& e) {
+            std::cerr << "Error: failed to parse YAML config (" << config_path
+                      << "): " << e.what() << std::endl;
+            return 1;
+        }
+    } else {
+        std::cout << "Using default PTD parameters." << std::endl;
+    }
 
     // 1. Read PCD
     PCDData data;
