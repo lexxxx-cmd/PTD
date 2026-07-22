@@ -1,5 +1,6 @@
 find_package(yaml-cpp REQUIRED)
 find_package(PCL CONFIG REQUIRED COMPONENTS common io)
+find_package(laslib CONFIG REQUIRED)
 
 add_executable(ptd_cli
     main.cpp
@@ -11,7 +12,7 @@ target_include_directories(ptd_cli PRIVATE
     ${CMAKE_SOURCE_DIR}/src
     ${CMAKE_SOURCE_DIR}/src/ptd
 )
-target_link_libraries(ptd_cli PRIVATE ptd yaml-cpp pcl_common pcl_io)
+target_link_libraries(ptd_cli PRIVATE ptd yaml-cpp pcl_common pcl_io LASlib)
 if(MSVC)
     target_compile_options(ptd_cli PRIVATE /wd4068 /wd4267 /wd4244 /wd4018)
 endif()
